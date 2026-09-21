@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a0b3f">
+<title>تبریک تولد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#2a0b3f;
+  --spot:#4b1568;
+  --cream:#fff3df;
+  --coral:#ff5c6c;
+  --sun:#ffc83d;
+  --mint:#37d6a0;
+  --sky:#4cc9f0;
+  --grape:#9b5de5;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--night)}
+body{
+  font-family:'Vazirmatn','Vazir',Tahoma,'Segoe UI',system-ui,sans-serif;
+  font-weight:500;
+  color:var(--cream);
+  background:var(--night);
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse 80% 55% at 50% 58%,var(--spot) 0%,transparent 70%);
+}
+
+/* ریسمان پرچم‌های جشن */
+.bunting{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:3;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='176' height='58'%3E%3Cpath d='M0 5H176' stroke='%23fff3df' stroke-width='2' opacity='.7'/%3E%3Cpath d='M8 5L40 5L24 46Z' fill='%23ff5c6c'/%3E%3Cpath d='M52 5L84 5L68 46Z' fill='%23ffc83d'/%3E%3Cpath d='M96 5L128 5L112 46Z' fill='%2337d6a0'/%3E%3Cpath d='M140 5L172 5L156 46Z' fill='%234cc9f0'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;background-size:176px 58px;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,.25));
+}
+
+/* بادکنک‌ها */
+#balloons{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.balloon{
+  position:absolute;bottom:-240px;width:var(--s);
+  pointer-events:auto;cursor:pointer;touch-action:manipulation;
+  animation:rise linear forwards;
+}
+@keyframes rise{to{transform:translateY(calc(-100vh - 380px))}}
+.sway{display:block;transform-origin:50% 100%;animation:sway var(--sw,3.6s) ease-in-out infinite alternate}
+@keyframes sway{from{transform:translateX(-12px) rotate(-5deg)}to{transform:translateX(12px) rotate(5deg)}}
+.b-body{
+  display:block;width:100%;height:calc(var(--s)*1.2);
+  border-radius:50% 50% 48% 48%/58% 58% 42% 42%;
+  background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.85) 0 5%,rgba(255,255,255,0) 20%),var(--c);
+  box-shadow:inset -7px -10px 16px rgba(0,0,0,.2);
+}
+.b-knot{display:block;width:11px;height:10px;margin:-1px auto 0;background:var(--c);clip-path:polygon(50% 0,100% 100%,0 100%);filter:brightness(.8)}
+.b-string{display:block;width:2px;height:80px;margin:0 auto;background:linear-gradient(rgba(255,243,223,.8),rgba(255,243,223,.1))}
+.balloon.popped{pointer-events:none;animation-play-state:paused}
+.balloon.popped .sway{animation:pop .2s ease-out forwards}
+@keyframes pop{0%{transform:scale(1);opacity:1}40%{transform:scale(1.22)}100%{transform:scale(1.5);opacity:0}}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:6}
+
+/* صفحه‌ها */
+.screen{
+  display:none;position:relative;z-index:2;
+  min-height:100vh;min-height:100dvh;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;
+  padding:78px 20px calc(30px + env(safe-area-inset-bottom));
+}
+.screen.active{display:flex}
+
+/* روی جلد */
+.gift{width:min(56vw,200px);animation:wiggle 3.6s ease-in-out infinite;transform-origin:50% 100%}
+.gift svg{display:block;width:100%;height:auto;overflow:visible}
+@keyframes wiggle{0%,72%,100%{transform:rotate(0)}76%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}84%{transform:rotate(-4deg)}88%{transform:rotate(3deg)}92%{transform:rotate(0)}}
+#lid{transform-box:fill-box;transform-origin:50% 100%;transition:transform .8s cubic-bezier(.25,1.5,.45,1),opacity .5s .25s}
+.gift.open{animation:none}
+.gift.open #lid{transform:translateY(-100px) rotate(-16deg);opacity:0}
+.cover-title{font-size:clamp(28px,8vw,40px);font-weight:900;line-height:1.4}
+.cover-sub{font-size:16px;opacity:.85}
+.field{width:min(100%,340px)}
+input{
+  width:100%;padding:14px 18px;border-radius:14px;border:0;
+  background:var(--cream);color:var(--night);
+  font:inherit;font-weight:700;font-size:18px;text-align:center;
+  box-shadow:0 5px 0 rgba(0,0,0,.35);
+}
+input::placeholder{color:rgba(42,11,63,.5);font-weight:500}
+
+/* دکمه‌ها */
+.btn{
+  font:inherit;font-weight:900;font-size:16px;color:var(--night);
+  border:0;cursor:pointer;padding:13px 22px;border-radius:14px;
+  background:var(--cream);box-shadow:0 5px 0 rgba(0,0,0,.35);
+  transition:transform .08s,box-shadow .08s;pointer-events:auto;
+}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn.coral{background:var(--coral)}
+.btn.sun{background:var(--sun)}
+.btn.mint{background:var(--mint)}
+.btn.big{font-size:19px;padding:15px 38px}
+.btn.ghost{background:transparent;color:var(--cream);box-shadow:none;border:2px solid rgba(255,243,223,.45);font-weight:700}
+.btn.ghost:active{transform:scale(.96)}
+.btn:focus-visible,input:focus-visible,.cake-wrap:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+
+/* کارت اصلی */
+#card{gap:10px;pointer-events:none}
+.title{display:flex;flex-wrap:wrap;justify-content:center;gap:.05em .3em;font-size:clamp(50px,17vw,96px);font-weight:900;line-height:1.2}
+.title span{
+  display:inline-block;color:var(--cream);
+  text-shadow:3px 3px 0 var(--coral),6px 6px 0 var(--sun);
+  transform:rotate(var(--r,0deg));
+}
+.title span:nth-child(1){--r:-3deg}
+.title span:nth-child(2){--r:2.5deg}
+#card.active .title span{animation:drop .9s cubic-bezier(.3,1.5,.5,1) both}
+#card.active .title span:nth-child(2){animation-delay:.18s}
+@keyframes drop{
+  0%{transform:translateY(-140px) rotate(calc(var(--r)*4));opacity:0}
+  50%{opacity:1}
+  100%{transform:translateY(0) rotate(var(--r));opacity:1}
+}
+.for{font-size:clamp(20px,5.6vw,26px);font-weight:700}
+.for b{font-weight:900;color:var(--sun)}
+
+.cake-wrap{
+  position:relative;isolation:isolate;
+  width:min(70vw,300px);margin:4px 0 0;
+  cursor:pointer;pointer-events:auto;
+}
+.cake-wrap svg{display:block;width:100%;height:auto;overflow:visible}
+.cake-glow{
+  position:absolute;left:50%;top:42%;width:160%;aspect-ratio:1;
+  transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,200,61,.3),transparent);
+  transition:opacity .6s;
+}
+.cake-wrap.blown .cake-glow{opacity:.2}
+
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flicker .22s ease-in-out infinite alternate;transition:opacity .3s,transform .3s}
+@keyframes flicker{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.14) rotate(3deg)}}
+.gl{transition:opacity .4s}
+.blown .flame{animation:none;opacity:0;transform:scale(.2)}
+.blown .gl{opacity:0}
+.smoke{opacity:0;transform-box:fill-box;transform-origin:center}
+.blown .smoke{animation:smoke 1.8s ease-out forwards}
+.blown .smoke.d2{animation-delay:.3s}
+@keyframes smoke{0%{opacity:.75;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-52px) scale(2.6)}}
+
+.wish{font-size:clamp(16px,4.6vw,19px);font-weight:700;min-height:1.7em;padding:0 8px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(100%,360px);margin-top:4px}
+.actions .btn.big{grid-column:1/-1}
+.msg{
+  max-width:360px;margin-top:14px;
+  font-size:16px;line-height:2;font-weight:700;
+  padding:16px 22px;border-radius:14px;
+  background:var(--cream);color:var(--night);
+  transform:rotate(-1.2deg);box-shadow:0 6px 0 rgba(0,0,0,.3);
+}
+.chip{
+  display:none;position:fixed;z-index:5;pointer-events:none;
+  top:68px;inset-inline-start:12px;
+  font-size:14px;font-weight:700;padding:6px 12px;border-radius:999px;
+  background:rgba(0,0,0,.35);color:var(--cream);
+}
+body.in-card .chip{display:block}
+
+@media (max-height:640px){
+  .cake-wrap{width:min(52vw,220px)}
+  .screen{padding-top:70px}
+}
+@media (prefers-reduced-motion:reduce){
+  .gift,.sway,.flame,#card.active .title span{animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bunting" aria-hidden="true"></div>
+<div id="balloons" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="chip" id="counter">🎈 بادکنک ترکونده: ۰</div>
+
+<!-- صفحه اول: جعبه کادو -->
+<section id="cover" class="screen active">
+  <div class="gift" id="gift" aria-hidden="true">
+    <svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="201" rx="72" ry="8" fill="#000" opacity=".25"/>
+      <rect x="32" y="98" width="136" height="100" rx="10" fill="#ff5c6c"/>
+      <rect x="91" y="98" width="18" height="100" fill="#ffc83d"/>
+      <g id="lid">
+        <rect x="22" y="70" width="156" height="34" rx="10" fill="#ff8a96"/>
+        <rect x="91" y="70" width="18" height="34" fill="#ffd970"/>
+        <path d="M100 70C68 18 34 40 62 64C78 76 94 72 100 70Z" fill="#ffc83d"/>
+        <path d="M100 70C132 18 166 40 138 64C122 76 106 72 100 70Z" fill="#ffc83d"/>
+        <circle cx="100" cy="70" r="9" fill="#f2a516"/>
+      </g>
+    </svg>
+  </div>
+  <h1 class="cover-title">یه سورپرایز برات دارم</h1>
+  <p class="cover-sub">کارت برای کی می‌فرستی؟</p>
+  <div class="field">
+    <input id="nameInput" type="text" maxlength="24" autocomplete="off" enterkeyhint="go" placeholder="اسم تولدی (اختیاری)" aria-label="اسم تولدی">
+  </div>
+  <button class="btn coral big" id="openBtn">بازش کن</button>
+</section>
+
+<!-- صفحه دوم: کارت تبریک -->
+<main id="card" class="screen">
+  <h1 class="title"><span>تولدت</span><span>مبارک!</span></h1>
+  <p class="for">برای <b id="nameText">تو</b></p>
+
+  <div class="cake-wrap" id="cake" role="button" tabindex="0" aria-label="کیک تولد. برای فوت کردن شمع‌ها بزن">
+    <div class="cake-glow"></div>
+    <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff6a00"/><stop offset=".55" stop-color="#ffc300"/><stop offset="1" stop-color="#fff7b0"/></linearGradient>
+        <radialGradient id="gl"><stop offset="0" stop-color="#ffc83d" stop-opacity=".8"/><stop offset="1" stop-color="#ffc83d" stop-opacity="0"/></radialGradient>
+        <linearGradient id="tierA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6f7d"/><stop offset="1" stop-color="#e83a50"/></linearGradient>
+        <linearGradient id="tierB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f2a516"/></linearGradient>
+      </defs>
+      <!-- بشقاب -->
+      <ellipse cx="150" cy="235" rx="138" ry="12" fill="#000" opacity=".22"/>
+      <ellipse cx="150" cy="229" rx="136" ry="13" fill="#fff3df"/>
+      <!-- طبقه پایین -->
+      <rect x="38" y="148" width="224" height="80" rx="18" fill="url(#tierA)"/>
+      <rect x="38" y="146" width="224" height="20" rx="10" fill="#fff3df"/>
+      <rect x="58" y="158" width="16" height="28" rx="8" fill="#fff3df"/>
+      <rect x="108" y="158" width="16" height="36" rx="8" fill="#fff3df"/>
+      <rect x="172" y="158" width="16" height="24" rx="8" fill="#fff3df"/>
+      <rect x="226" y="158" width="16" height="32" rx="8" fill="#fff3df"/>
+      <!-- طبقه بالا -->
+      <rect x="74" y="98" width="152" height="58" rx="14" fill="url(#tierB)"/>
+      <rect x="68" y="150" width="164" height="14" rx="7" fill="#fff3df"/>
+      <rect x="74" y="96" width="152" height="18" rx="9" fill="#fff3df"/>
+      <rect x="92" y="106" width="14" height="24" rx="7" fill="#fff3df"/>
+      <rect x="142" y="106" width="14" height="32" rx="7" fill="#fff3df"/>
+      <rect x="192" y="106" width="14" height="20" rx="7" fill="#fff3df"/>
+      <g id="cakeDeco"></g>
+      <!-- شمع‌ها -->
+      <g>
+        <rect x="115" y="62" width="10" height="38" rx="3" fill="#37d6a0"/>
+        <rect x="145" y="62" width="10" height="38" rx="3" fill="#4cc9f0"/>
+        <rect x="175" y="62" width="10" height="38" rx="3" fill="#9b5de5"/>
+        <path d="M115 76l10-6M115 88l10-6M145 76l10-6M145 88l10-6M175 76l10-6M175 88l10-6" stroke="#fff3df" stroke-width="2.5" opacity=".65"/>
+        <rect x="119" y="56" width="2" height="7" fill="#2a0b3f"/>
+        <rect x="149" y="56" width="2" height="7" fill="#2a0b3f"/>
+        <rect x="179" y="56" width="2" height="7" fill="#2a0b3f"/>
+      </g>
+      <!-- نور شعله‌ها -->
+      <g class="gl">
+        <circle cx="120" cy="46" r="24" fill="url(#gl)"/>
+        <circle cx="150" cy="46" r="24" fill="url(#gl)"/>
+        <circle cx="180" cy="46" r="24" fill="url(#gl)"/>
+      </g>
+      <!-- شعله‌ها -->
+      <g transform="translate(120 57)"><g class="flame" style="animation-delay:-.05s"><path d="M0-18C8-6 8 2 0 5C-8 2-8-6 0-18Z" fill="url(#fl)"/><path d="M0-8C3-3 3 1 0 3C-3 1-3-3 0-8Z" fill="#fff" opacity=".85"/></g></g>
+      <g transform="translate(150 57)"><g class="flame" style="animation-delay:-.13s"><path d="M0-18C8-6 8 2 0 5C-8 2-8-6 0-18Z" fill="url(#fl)"/><path d="M0-8C3-3 3 1 0 3C-3 1-3-3 0-8Z" fill="#fff" opacity=".85"/></g></g>
+      <g transform="translate(180 57)"><g class="flame" style="animation-delay:-.09s"><path d="M0-18C8-6 8 2 0 5C-8 2-8-6 0-18Z" fill="url(#fl)"/><path d="M0-8C3-3 3 1 0 3C-3 1-3-3 0-8Z" fill="#fff" opacity=".85"/></g></g>
+      <!-- دود بعد از فوت کردن -->
+      <g transform="translate(120 50)"><circle class="smoke" r="5" fill="#fff3df"/><circle class="smoke d2" r="4" cx="4" fill="#fff3df"/></g>
+      <g transform="translate(150 50)"><circle class="smoke" r="5" fill="#fff3df"/><circle class="smoke d2" r="4" cx="-4" fill="#fff3df"/></g>
+      <g transform="translate(180 50)"><circle class="smoke" r="5" fill="#fff3df"/><circle class="smoke d2" r="4" cx="4" fill="#fff3df"/></g>
+    </svg>
+  </div>
+
+  <p class="wish" id="wish">یه آرزو کن، بعد شمع‌ها رو فوت کن</p>
+
+  <div class="actions">
+    <button class="btn coral big" id="blowBtn">شمع‌ها رو فوت کن</button>
+    <button class="btn sun" id="musicBtn">توقف آهنگ</button>
+    <button class="btn mint" id="moreBtn">بادکنک بیشتر</button>
+    <button class="btn ghost" id="backBtn" style="grid-column:1/-1">تغییر اسم</button>
+  </div>
+
+  <!-- متن پیام: هر چی دوست داری اینجا بنویس -->
+  <p class="msg">امیدوارم امسال پر از خنده و اتفاق‌های قشنگ باشه. هر چی آرزو داری، زودتر از چیزی که فکرشو می‌کنی بهت برسه.</p>
+</main>
+
+<script>
+(() => {
+'use strict';
+
+const $ = id => document.getElementById(id);
+const rand = (a, b) => Math.random() * (b - a) + a;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const fa = n => Number(n).toLocaleString('fa-IR');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const cover = $('cover'), card = $('card'), gift = $('gift');
+const nameInput = $('nameInput'), nameText = $('nameText');
+const cake = $('cake'), wish = $('wish');
+const blowBtn = $('blowBtn'), musicBtn = $('musicBtn'), moreBtn = $('moreBtn'), backBtn = $('backBtn');
+const counter = $('counter');
+
+const COLORS = ['#ff5c6c', '#ffc83d', '#37d6a0', '#4cc9f0', '#9b5de5', '#ff8fb1', '#fff3df'];
+
+/* ---------- کانفتی ---------- */
+const cv = $('confetti'), cx = cv.getContext('2d');
+let W = 0, H = 0, parts = [], raf = null;
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+function burst(x, y, n = 80, o = {}) {
+  const angle = o.angle !== undefined ? o.angle : -Math.PI / 2;
+  const spread = o.spread !== undefined ? o.spread : Math.PI * 2;
+  const power = o.power || [4, 13];
+  const life = o.life || [80, 150];
+  const colors = o.colors || COLORS;
+  for (let i = 0; i < n; i++) {
+    const a = angle + (Math.random() - 0.5) * spread;
+    const p = rand(power[0], power[1]);
+    parts.push({
+      x, y, vx: Math.cos(a) * p, vy: Math.sin(a) * p,
+      w: rand(6, 11), h: rand(4, 7),
+      rot: rand(0, 6.28), vr: rand(-0.3, 0.3), tilt: rand(0, 6.28),
+      color: pick(colors), round: Math.random() < 0.25,
+      life: rand(life[0], life[1])
+    });
+  }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+
+function tick() {
+  cx.clearRect(0, 0, W, H);
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i];
+    p.vy += 0.22; p.vx *= 0.985; p.vy *= 0.985;
+    p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.tilt += 0.12; p.life--;
+    if (p.y > H + 30 || p.life < 0) { parts.splice(i, 1); continue; }
+    cx.save();
+    cx.translate(p.x, p.y);
+    cx.rotate(p.rot);
+    cx.scale(1, Math.cos(p.tilt));
+    cx.globalAlpha = Math.min(1, p.life / 25);
+    cx.fillStyle = p.color;
+    if (p.round) { cx.beginPath(); cx.arc(0, 0, p.h * 0.6, 0, 6.283); cx.fill(); }
+    else cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : null;
+  if (!parts.length) cx.clearRect(0, 0, W, H);
+}
+
+function rain(ms) {
+  const end = Date.now() + ms;
+  const id = setInterval(() => {
+    if (Date.now() > end) { clearInterval(id); return; }
+    burst(rand(0, W), -12, 5, { angle: Math.PI / 2, spread: 0.9, power: [1, 3.5], life: [150, 240] });
+  }, 90);
+}
+
+/* ---------- صدا و آهنگ تولدت مبارک ---------- */
+let ac = null, master = null, session = null, loopTimer = null, playing = false, noiseBuf = null;
+
+function ensureAudio() {
+  if (!ac) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ac = new AC();
+    master = ac.createGain();
+    master.gain.value = 0.55;
+    master.connect(ac.destination);
+  }
+  if (ac.state === 'suspended') ac.resume();
+}
+
+function getNoise() {
+  if (!noiseBuf) {
+    const len = ac.sampleRate;
+    noiseBuf = ac.createBuffer(1, len, ac.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  }
+  return noiseBuf;
+}
+
+const N = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+// [نت، طول به ضرب] — ۲۴ ضرب، ۸ میزان سه‌چهارم
+const MELODY = [
+  ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['C5', 1], ['B4', 2],
+  ['G4', .75], ['G4', .25], ['A4', 1], ['G4', 1], ['D5', 1], ['C5', 2],
+  ['G4', .75], ['G4', .25], ['G5', 1], ['E5', 1], ['C5', 1], ['B4', 1], ['A4', 1],
+  ['F5', .75], ['F5', .25], ['E5', 1], ['C5', 1], ['D5', 1], ['C5', 2]
+];
+const BASS = [130.81, 98, 98, 130.81, 130.81, 130.81, 87.31, 130.81];
+
+function bell(f, t, dur, out) {
+  const g = ac.createGain(), g2 = ac.createGain();
+  const o1 = ac.createOscillator(), o2 = ac.createOscillator();
+  o1.type = 'triangle'; o1.frequency.value = f;
+  o2.type = 'sine'; o2.frequency.value = f * 2;
+  g2.gain.value = 0.18;
+  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(out);
+  const end = t + Math.max(dur * 1.5, 0.45) + 0.35;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.42, t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, end);
+  o1.start(t); o2.start(t); o1.stop(end + 0.05); o2.stop(end + 0.05);
+}
+
+function bass(f, t, out, v = 1) {
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'sine'; o.frequency.value = f;
+  o.connect(g); g.connect(out);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.22 * v, t + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 1.1);
+  o.start(t); o.stop(t + 1.2);
+}
+
+function playSong() {
+  if (!playing || !ac) return;
+  const beat = 0.62, t0 = ac.currentTime + 0.12;
+  if (session) { const old = session; setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 3000); }
+  session = ac.createGain();
+  session.connect(master);
+  let t = t0;
+  for (const [n, b] of MELODY) { bell(N[n], t, b * beat, session); t += b * beat; }
+  BASS.forEach((f, i) => {
+    const bt = t0 + i * 3 * beat;
+    bass(f, bt, session);
+    bass(f * 2, bt + 2 * beat, session, 0.6);
+  });
+  loopTimer = setTimeout(playSong, (24 * beat + 1.4) * 1000);
+}
+
+function updateMusicBtn() { musicBtn.textContent = playing ? 'توقف آهنگ' : 'پخش آهنگ'; }
+
+function startMusic() {
+  ensureAudio();
+  if (!ac || playing) return;
+  playing = true; updateMusicBtn(); playSong();
+}
+
+function stopMusic() {
+  playing = false;
+  clearTimeout(loopTimer);
+  if (session && ac) {
+    const s = session;
+    s.gain.cancelScheduledValues(ac.currentTime);
+    s.gain.setTargetAtTime(0, ac.currentTime, 0.08);
+    setTimeout(() => { try { s.disconnect(); } catch (e) {} }, 600);
+    session = null;
+  }
+  updateMusicBtn();
+}
+
+function sfxPop() {
+  if (!ac) return;
+  const t = ac.currentTime;
+  const s = ac.createBufferSource(); s.buffer = getNoise();
+  const f = ac.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = rand(600, 1400);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+  s.connect(f); f.connect(g); g.connect(master);
+  s.start(t, rand(0, 0.5), 0.15);
+  const o = ac.createOscillator(), og = ac.createGain();
+  o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(60, t + 0.1);
+  og.gain.setValueAtTime(0.5, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+  o.connect(og); og.connect(master); o.start(t); o.stop(t + 0.14);
+}
+
+function sfxBlow() {
+  if (!ac) return;
+  const t = ac.currentTime;
+  const s = ac.createBufferSource(); s.buffer = getNoise();
+  const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8;
+  f.frequency.setValueAtTime(1400, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.8);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.5, t + 0.12);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t);
+}
+
+function sfxChime() {
+  if (!ac) return;
+  const t = ac.currentTime + 0.02;
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => bell(f, t + i * 0.09, 0.3, master));
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (!ac) return;
+  if (document.hidden) ac.suspend(); else if (playing || card.classList.contains('active')) ac.resume();
+});
+
+/* ---------- تزئین کیک ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  parent.appendChild(e);
+  return e;
+}
+(function decorateCake() {
+  const deco = $('cakeDeco');
+  const SP = ['#ffc83d', '#4cc9f0', '#37d6a0', '#9b5de5', '#fff3df', '#ff8fb1'];
+  for (let i = 0; i < 34; i++) {
+    const top = i < 12;
+    const x = top ? rand(88, 210) : rand(52, 246);
+    const y = top ? rand(122, 146) : rand(184, 212);
+    svgEl('rect', { x, y, width: 9, height: 3.2, rx: 1.6, fill: pick(SP), transform: 'rotate(' + rand(0, 180) + ' ' + (x + 4.5) + ' ' + (y + 1.6) + ')' }, deco);
+  }
+  for (let x = 52; x <= 248; x += 16) svgEl('circle', { cx: x, cy: 221, r: 4.5, fill: '#fff3df', opacity: 0.9 }, deco);
+})();
+
+/* ---------- بادکنک‌ها ---------- */
+const layer = $('balloons');
+const BALLOON_COLORS = ['#ff5c6c', '#ffc83d', '#37d6a0', '#4cc9f0', '#9b5de5', '#ff8fb1', '#ff8a3d'];
+let poppedCount = 0, balloonsOn = false;
+
+function spawnBalloon(o = {}) {
+  if (layer.children.length > 46) return;
+  const el = document.createElement('div');
+  el.className = 'balloon';
+  const color = pick(BALLOON_COLORS);
+  const size = rand(54, 98);
+  const dur = o.fast ? rand(6, 10) : rand(10, 18);
+  el.style.setProperty('--s', size + 'px');
+  el.style.setProperty('--c', color);
+  el.style.setProperty('--sw', rand(2.6, 4.6) + 's');
+  el.style.left = rand(-3, 90) + '%';
+  el.style.animationDuration = dur + 's';
+  el.style.animationDelay = o.initial ? (-rand(0, dur * 0.6)) + 's' : (o.delay || 0) + 's';
+  el.dataset.respawn = o.respawn === false ? '0' : '1';
+  el.dataset.color = color;
+  el.innerHTML = '<span class="sway"><span class="b-body"></span><span class="b-knot"></span><span class="b-string"></span></span>';
+  el.addEventListener('pointerdown', e => { e.preventDefault(); popBalloon(el); });
+  el.addEventListener('animationend', e => {
+    if (e.target !== el || e.animationName !== 'rise') return;
+    el.remove();
+    if (el.dataset.respawn === '1') spawnBalloon();
+  });
+  layer.appendChild(el);
+}
+
+function popBalloon(el) {
+  if (el.classList.contains('popped')) return;
+  ensureAudio();
+  const r = el.querySelector('.b-body').getBoundingClientRect();
+  el.classList.add('popped');
+  burst(r.left + r.width / 2, r.top + r.height / 2, 36, { power: [3, 10], colors: [el.dataset.color, '#fff3df', '#ffc83d'] });
+  sfxPop();
+  poppedCount++;
+  counter.textContent = '🎈 بادکنک ترکونده: ' + fa(poppedCount);
+  setTimeout(() => {
+    el.remove();
+    if (el.dataset.respawn === '1') spawnBalloon();
+  }, 220);
+}
+
+function startBalloons() {
+  if (balloonsOn) return;
+  balloonsOn = true;
+  const n = reduceMotion ? 5 : 8;
+  for (let i = 0; i < n; i++) spawnBalloon({ initial: i < n / 2, delay: i * 0.4 });
+}
+
+function moreBalloons() {
+  const n = reduceMotion ? 6 : 14;
+  for (let i = 0; i < n; i++) spawnBalloon({ fast: true, respawn: false, delay: i * 0.12 });
+}
+
+/* ---------- کیک و شمع‌ها ---------- */
+let lit = true;
+function setLit(v) {
+  lit = v;
+  cake.classList.toggle('blown', !v);
+  blowBtn.textContent = v ? 'شمع‌ها رو فوت کن' : 'دوباره روشن کن';
+  wish.textContent = v ? 'یه آرزو کن، بعد شمع‌ها رو فوت کن' : 'آرزوت رو کردی؛ حالا منتظر باش برآورده بشه';
+}
+
+function toggleCandles() {
+  ensureAudio();
+  if (lit) {
+    setLit(false);
+    sfxBlow();
+    const r = cake.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height * 0.3, 60, { power: [5, 13] });
+    setTimeout(() => {
+      sfxChime();
+      burst(0, H * 0.6, 70, { angle: -Math.PI / 3, spread: 0.8, power: [10, 19] });
+      burst(W, H * 0.6, 70, { angle: -Math.PI * 2 / 3, spread: 0.8, power: [10, 19] });
+    }, 420);
+  } else {
+    setLit(true);
+  }
+}
+
+/* ---------- باز کردن کارت ---------- */
+let opened = false;
+
+function openCard() {
+  if (opened) return;
+  opened = true;
+  ensureAudio();
+  const name = nameInput.value.trim();
+  nameText.textContent = name || 'تو';
+  gift.classList.add('open');
+  sfxChime();
+  const r = gift.getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + r.height * 0.4, 90, { power: [5, 15] });
+  setTimeout(() => {
+    cover.classList.remove('active');
+    card.classList.add('active');
+    document.body.classList.add('in-card');
+    window.scrollTo(0, 0);
+    startBalloons();
+    moreBalloons();
+    startMusic();
+    if (!reduceMotion) rain(3500);
+  }, 900);
+}
+
+function backToCover() {
+  stopMusic();
+  card.classList.remove('active');
+  cover.classList.add('active');
+  gift.classList.remove('open');
+  document.body.classList.remove('in-card');
+  opened = false;
+  setLit(true);
+  window.scrollTo(0, 0);
+  nameInput.focus();
+}
+
+$('openBtn').addEventListener('click', openCard);
+nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') openCard(); });
+blowBtn.addEventListener('click', toggleCandles);
+cake.addEventListener('click', toggleCandles);
+cake.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCandles(); } });
+musicBtn.addEventListener('click', () => { if (playing) stopMusic(); else startMusic(); });
+moreBtn.addEventListener('click', () => {
+  ensureAudio();
+  moreBalloons();
+  burst(W / 2, H, 60, { angle: -Math.PI / 2, spread: 1.4, power: [9, 17] });
+});
+backBtn.addEventListener('click', backToCover);
+
+// اگه اسم تو آدرس بود، مثلاً ?name=سارا
+const q = new URLSearchParams(location.search).get('name');
+if (q) nameInput.value = q.slice(0, 24);
+})();
+</script>
+</body>
+</html>
